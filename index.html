@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+
+<title>Dockette\Devstack presentation at NetteCamp 2017 </title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<link rel="stylesheet" href="css/reveal.css">
+<link rel="stylesheet" href="css/theme/league.css" id="theme">
+<link rel="stylesheet" href="css/custom.css">
+
+<!-- Code syntax highlighting -->
+<link rel="stylesheet" href="lib/css/zenburn.css">
+
+<!-- Printing and PDF exports -->
+<script>
+	var link = document.createElement( 'link' );
+	link.rel = 'stylesheet';
+	link.type = 'text/css';
+	link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+	document.getElementsByTagName( 'head' )[0].appendChild( link );
+</script>
+
+<!--[if lt IE 9]>
+<script src="lib/js/html5shiv.js"></script>
+<![endif]-->
+</head>
+
+<body>
+
+<div class="reveal">
+
+    <div class="slides">
+        <section>
+            <h2>Contributte / API</h2>
+            <h3>Milan Šulc</h3>
+            <h4>f3l1x</h4>
+            <img src="https://avatars1.githubusercontent.com/u/538058?v=4&s=200">
+        </section>
+
+        <section>
+            <h3>Contributte</h3>
+            <img src="https://avatars1.githubusercontent.com/u/22681157?v=4&s=200">
+            <p><a href="https://github.com/contributte">github.com/contributte</a></p>
+            <p><a href="https://twitter.com/contributte">@contributte</a></p>
+        </section>
+
+        <section>
+            <section>
+                <h3>Contributte</h3>
+                <ul>
+                    <li>Nette contrib</li>
+                    <li>Symfony</li>
+                    <li>PSR</li>
+                    <li>Other</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Contributte > Nette contrib</h3>
+                <ul>
+                    <li>application (<span class="red">on-the-fly</span>)</li>
+                    <li>bootstrap [<span class="red">NETTE__</span>]</li>
+                    <li>cache (<span class="red">factory</span>)</li>
+                    <li>database (<span class="red">nested transactions</span>)</li>
+                    <li>di (<span class="red">autoload</span>)</li>
+                    <li>forms (<span class="red">factory</span>)</li>
+                    <li>latte (<span class="red">macros</span>)</li>
+                    <li>mail (<span class="red">file, composite mailer</span>)</li>
+                    <li>http (<span class="red">curl, basic-auth, sapi</span>)</li>
+                    <li>security (<span class="red">authenticators</span>)</li>
+                    <li>utils (<span class="red">extra utils</span>)</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Contributte > Symfony</h3>
+                <ul>
+                    <li>console</li>
+                    <li>console commands (<span class="blue">Q2/2018</span>)</li>
+                    <li>event-dispatcher</li>
+                    <li>event-dispatcher bridges <br> (<span class="red">application, security</span>)</li>
+                    <li>validator (<span class="blue">Q2/2018</span>)</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Contributte > PSR</h3>
+                <ul>
+                    <li>psr7-http-message</li>
+                    <li>psr6-caching (<span class="blue">Q4/2017</span>)</li>
+                    <li>psr3-logging (<span class="blue">Q4/2017</span>)</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Contributte > Other</h3>
+                <ul>
+                    <li>api</li>
+                    <li>middlewares</li>
+                    <li>logging (funny slack)</li>
+                </ul>
+            </section>
+        </section>
+
+        <section>
+            <section data-markdown>
+                <script type="text/template">
+                    ### Motivation
+                    - PSR-7 <!-- .element: class="fragment" -->
+                    - middlewares <!-- .element: class="fragment" -->
+                    - @annotations <!-- .element: class="fragment" -->
+                    - controllers <!-- .element: class="fragment" -->
+                    - better architecture <!-- .element: class="fragment" -->
+                </script>
+            </section>
+        </section>
+
+        <section data-markdown>
+            <script type="text/template">
+                ### 3rd party
+                - drahak/restful (98s / 37k)
+                - newpope/nette-restroute (69s / 38k)
+                - tomaj/nette-api (14s / 15k)
+                - ublaboo/api-router (9s / 5.5k)
+                - ricco24/api-nette (15s / 0.1k)
+                - contributte/api (1k, 1M) <!-- .element: class="fragment blue" -->
+            </script>
+        </section>
+
+        <section>
+            <section>
+                <h3>PSR-7</h3>
+                <a href="http://www.php-fig.org/psr/psr-7/">php-fig.org/psr/psr-7</a>
+                <br>
+                <a href="https://github.com/contributte/psr7-http-message">contributte/psr7-http-message</a>
+            </section>
+            <section>
+                <h4>Request + ServerRequest</h4>
+                <pre><code class="hljs" data-trim>
+$request->getHeaders()
+$request->getHeader($name)
+$request->withHeader($name, $value)
+$request->getBody()
+$request->withBody($body)
+// ...
+$serverRequest->getUploadedFiles()
+$serverRequest->withUploadedFiles(array $uploadedFiles)
+// ...
+                </code></pre>
+
+                <h4>Response</h4>
+                <pre><code class="hljs" data-trim>
+$response->withHeader($name, $value)
+$response->getBody()->write($payload)
+$response->withBody($body)
+// ..
+                </code></pre>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h3>Middlewares</h3>
+                <a href="https://github.com/contributte/middlewares">contributte/middlewares</a>
+                <br>
+                <img src="misc/middleware.png" alt="">
+            </section>
+            <section>
+                <pre><code class="hljs" data-trim>
+extensions:
+    middleware: Contributte\Middlewares\DI\MiddlewareExtension
+                </code></pre>
+
+                <pre><code class="hljs" data-trim>
+middleware:
+  middlewares:
+    # Catch all exceptions
+    - Contributte\Middlewares\Middleware\TracyMiddleware
+
+    # Your custom middlewares
+    - TrailingSlashMiddleware
+    - UuidMiddleware
+    - CspMiddleware
+
+    # Api
+    - Contributte\Api\Middlewares\ApiMiddleware
+                </code></pre>
+            </section>
+            <section>
+                <h3>PHP - Middlewares</h3>
+                <a href="https://github.com/oscarotero/psr7-middlewares">oscarotero/psr7-middlewares</a>
+                <p class="fragment"><strong>47 middlewares</strong></p>
+            </section>
+            <section>
+                <p>
+                    AccessLog,
+                    AttributeMapper,
+                    AuraRouter,
+                    AuraSession,
+                    BasePath,
+                    BasicAuthentication,
+                    BlockSpam,
+                    <span class="fragment highlight-red">Cache</span>,
+                    ClientIp,
+                    Cors,
+                    <span class="fragment highlight-red">Csp</span>,
+                    Csrf,
+                    DebugBar,
+                    Delay,
+                    DetectDevice,
+                    DigestAuthentication,
+                    EncodingNegotiator,
+                    ErrorHandler,
+                    Expires,
+                    FastRoute,
+                    FormTimestamp,
+                    Firewall,
+                    FormatNegotiator,
+                    Geolocate,
+                    GoogleAnalytics,
+                    Honeypot,
+                    Https,
+                    ImageTransformer,
+                    IncludeResponse,
+                    JsonSchema,
+                    LanguageNegotiation,
+                    LeagueRoute,
+                    MethodOverride,
+                    <span class="fragment highlight-red">Minify</span>,
+                    Payload,
+                    PhpSession,
+                    Piwik,
+                    ReadResponse,
+                    Recaptcha,
+                    Rename,
+                    ResponseTime,
+                    Robots,
+                    SaveResponse,
+                    Shutdown,
+                    TrailingSlash,
+                    <span class="fragment highlight-red">Uuid</span>,
+                    Whoops,
+                    Www
+                </p>
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h3>API</h3>
+                <a href="https://github.com/contributte/api">github.com/contributte/api</a>
+                <pre><code style="text-align: center">composer require contributte/api:0.3</code></pre>
+                <ul>
+                    <li>PSR-7</li>
+                    <li>Middlewares</li>
+                    <li>Annotations</li>
+                    <li>Controllers</li>
+                </ul>
+            </section>
+            <section>
+                <pre><code style="max-height: inherit;" class="hljs" data-trim>
+/**
+ * @Controller
+ * @RootPath("/hello")
+ */
+final class HelloController implements IController
+{
+
+    /**
+     * @Path("/world")
+     * @Method("GET")
+     * @param ApiRequest $request
+     * @param ApiResponse $response
+     * @return ApiResponse
+     */
+    public function index(ApiRequest $request, ApiResponse $response)
+    {
+        return $response->writeBody('Hello world!');
+    }
+}
+                </code></pre>
+            </section>
+        </section>
+
+        <section>
+            <h1>Demo</h1>
+            <a href="https://github.com/contributte/playground">github.com/contributte/playground</a>
+            <pre><code style="text-align: center">git clone git@github.com:contributte/playground.git</code></pre>
+        </section>
+
+        <section>
+            <h2>Roadmap</h2>
+            <ul>
+                <li>OpenApi (Swagger)</li>
+                <li>Entity Mapping (Req/Resp)</li>
+                <li>More examples</li>
+                <li>More blogposts</li>
+            </ul>
+        </section>
+
+        <section>
+            <h1>Q / A?</h1>
+        </section>
+
+        <section>
+            <h2>Thank you</h2>
+            <hr>
+            <h3>Milan Šulc</h3>
+            <p><a href="https://github.com/f3l1x">github.com/f3l1x</a></p>
+            <p><a href="https://twitter.com/xf3l1x">twitter.com/xf3l1x</a></p>
+            <p><a href="https://f3l1x.io">f3l1x.io</a></p>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+
+	// More info https://github.com/hakimel/reveal.js#configuration
+	Reveal.initialize({
+		controls: true,
+		progress: true,
+		history: true,
+		center: true,
+
+		transition: 'concave', // none/fade/slide/convex/concave/zoom
+
+		// More info https://github.com/hakimel/reveal.js#dependencies
+		dependencies: [
+			{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+			{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+			{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+			{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+			{ src: 'plugin/zoom-js/zoom.js', async: true },
+			{ src: 'plugin/notes/notes.js', async: true }
+		]
+	});
+
+</script>
+
+</body>
+</html>
